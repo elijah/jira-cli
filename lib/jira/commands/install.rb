@@ -7,6 +7,13 @@ module Jira
 
     desc "install", "Guides the user through JIRA installation"
     def install
+      if !Jira::Core.key_exists?
+        create_file Jira::Core.key_path, nil, verbose:false do
+          puts "Created an encryption key at ~/.jira-key."
+          SecureRandom.uuid
+        end
+        Encryptor.default_options.merge!(key: Jira::Core.key)
+      end
 
       create_file Jira::Core.url_path, nil, verbose:false do
         self.cli.ask("Enter your JIRA URL: ")
@@ -17,7 +24,7 @@ module Jira
         password = self.cli.ask("Enter your JIRA password: ") do |q|
           q.echo = false
         end
-        "#{username}:#{password}"
+        "#{username}:#{Jira::Core.encode(password.encrypt(salt:username))}"
       end
 
       Jira::Core.send(:discard_memoized)

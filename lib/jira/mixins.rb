@@ -4,6 +4,10 @@ module Jira
     require 'highline/import'
     require 'json'
     require 'faraday'
+    require 'encryptor'
+    require 'securerandom'
+    require "base64"
+    require 'uri'
     include Thor::Actions
 
     protected

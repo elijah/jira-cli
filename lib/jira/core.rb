@@ -8,6 +8,7 @@ module Jira
       def setup
         self.url
         self.auth
+        Encryptor.default_options.merge!(key: self.key) if self.key_exists?
       end
 
       ### Virtual Attributes
@@ -30,7 +31,14 @@ module Jira
       # @return [String] JIRA password
       #
       def password
-        @password ||= self.auth.last
+        @password ||= self.decode(self.auth.last).decrypt(salt:self.username)
+      end
+
+      #
+      # @return [String] JIRA encryption key
+      #
+      def key
+        @key ||= self.read(self.key_path)
       end
 
       #
@@ -39,6 +47,8 @@ module Jira
       def ticket
         `git rev-parse --abbrev-ref HEAD`.strip
       end
+
+      ### Helpers
 
       #
       # Determines whether or not the input ticket matches the expected JIRA
@@ -58,6 +68,29 @@ module Jira
         return false
       end
 
+      #
+      # @return [Boolean] true if key file exists and is not empty
+      #
+      def key_exists?
+        File.exists?(Jira::Core.key_path) && !File.zero?(Jira::Core.key_path)
+      end
+
+      #
+      # @param text [String] string to encode
+      # @return [String] encoded string
+      #
+      def encode(text)
+        URI.escape(Base64.encode64(text))
+      end
+
+      #
+      # @param text [String] string to dencode
+      # @return [String] dencoded string
+      #
+      def decode(text)
+        Base64.decode64(URI.unescape(text))
+      end
+
       ### Relevant Paths
 
       #
@@ -72,6 +105,13 @@ module Jira
       #
       def auth_path
         @auth_path ||= self.root_path + "/.jira-auth"
+      end
+
+      #
+      # @return [String] path to ~/.jira-key file
+      #
+      def key_path
+        @key_path ||= ENV['HOME'] + "/.jira-key"
       end
 
       #
@@ -92,6 +132,7 @@ module Jira
         # @return [String] JIRA password
         #
         def auth
+          raise InstallationException if !self.key_exists?
           @auth ||= self.read(self.auth_path).split(':')
         end
 
@@ -105,6 +146,7 @@ module Jira
           @auth = nil
           @username = nil
           @password = nil
+          @key = nil
         end
 
         #
