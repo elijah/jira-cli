@@ -11,6 +11,10 @@ module Jira
       self.define_actions
     end
 
+    def self.validate_endpoint(endpoint)
+
+    end
+
     protected
 
       #
