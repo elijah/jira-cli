@@ -33,5 +33,10 @@ module Jira
       end
     end
 
+    desc "sprint_add", "Adds current ticket to current sprint."
+    def sprint_add(ticket=Jira::Core.ticket)
+      self.api(:agile).put( 'sprint/41/issues/add', { issueKeys: [ticket] } )
+    end
+
   end
 end

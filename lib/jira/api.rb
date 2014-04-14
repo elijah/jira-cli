@@ -51,6 +51,7 @@ module Jira
               params,
               self.headers
             )
+            binding.pry
             json = response.body.to_s.from_json
             if self.errorless?(json, verbose)
               block.call(json)
