@@ -16,21 +16,21 @@ module Jira
       # @return [String] JIRA project endpoint
       #
       def url
-        @url ||= self.read(self.url_path)
+        @url ||=  ENV['JIRA_URL'] ||= self.read(self.url_path)
       end
 
       #
       # @return [String] JIRA username
       #
       def username
-        @username ||= self.auth.first
+        @username ||= ENV['JIRA_USERNAME'] ||= self.auth.first
       end
 
       #
       # @return [String] JIRA password
       #
       def password
-        @password ||= self.auth.last
+        @password ||= ENV['JIRA_PASSWORD'] ||= self.auth.last
       end
 
       #
@@ -64,14 +64,14 @@ module Jira
       # @return [String] path to .jira-url file
       #
       def url_path
-        @url_path ||= self.root_path + "/.jira-url"
+        @url_path ||= ENV['JIRA_URL_FILE'] ||= self.root_path + "/.jira-url"
       end
 
       #
       # @return [String] path to .jira-auth file
       #
       def auth_path
-        @auth_path ||= self.root_path + "/.jira-auth"
+        @auth_path ||= ENV['JIRA_AUTH_FILE'] ||= self.root_path + "/.jira-auth"
       end
 
       #
