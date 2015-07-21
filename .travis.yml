@@ -2,7 +2,7 @@ language: ruby
 rvm:
   - 2.1.0
 env:
-  - JIRA_URL="http://jira.example.org"
+  - JIRA_URL="jira.example.org"
   - JIRA_USERNAME="travis"
   - JIRA_PASSWORD="abc123"
   - JIRA_URL_FILE="/home/travis/.jira_url"
