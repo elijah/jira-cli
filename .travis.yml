@@ -3,6 +3,12 @@ rvm:
   - 1.9.3
   - 2.0.0
   - 2.1.0
+env:
+  - JIRA_URL="http://jira.example.org"
+  - JIRA_USERNAME="travis"
+  - JIRA_PASSWORD="abc123"
+  - JIRA_URL_FILE="/home/travis/.jira_url"
+  - JIRA_AUTH_FILE="/home/travis/.jira_auth"
 install: ./build.sh
 script: rspec
 notifications:
