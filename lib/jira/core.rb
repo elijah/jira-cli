@@ -115,8 +115,8 @@ module Jira
         # @return [String] contents of the file at the input path
         #
         def read(path)
-          self.validate_path!(path)
-          File.read(path).strip
+          #self.validate_path!(path)
+          #File.read(path).strip
         end
 
         #
