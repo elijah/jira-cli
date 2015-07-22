@@ -115,8 +115,8 @@ module Jira
         # @return [String] contents of the file at the input path
         #
         def read(path)
-          #self.validate_path!(path)
-          #File.read(path).strip
+          self.validate_path!(path)
+          File.read(path).strip
         end
 
         #
@@ -125,8 +125,7 @@ module Jira
         # @param path [String] path to validate
         #
         def validate_path!(path)
-          # Disabling this for testing.
-          #raise InstallationException.new if !File.exists?(path)
+          raise InstallationException.new if !File.exists?(path)
         end
 
     end
